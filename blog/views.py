@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse
 from .models import Post
 from django.contrib.auth.models import User
+from django.contrib.auth.decorators import user_passes_test
+
 
 # class views 
 from django.views.generic import (
@@ -118,3 +120,10 @@ class UserPostListView(ListView):
     def get_queryset(self):
         user = get_object_or_404(User, username=self.kwargs.get('username'))
         return Post.objects.filter(author=user).order_by('-date_posted')
+
+
+# def user_is_not_logged_in(user):
+#     return not user.is_authenticated()
+
+# @user_passes_test(user_is_not_logged_in)
+# def my_view(request):
