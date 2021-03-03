@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     'blog',
     'users.apps.UsersConfig',
     'crispy_forms',
+    'rest_framework',
+    'rest_framework.authtoken',
     # 'blog.apps.BlogConfig'
 ]
 
@@ -120,6 +122,13 @@ USE_L10N = True
 USE_TZ = True
 
 
+#REST frame work auth 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+    ]
+}
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
@@ -150,3 +159,6 @@ EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS') #
 print("----------------------------")
 print(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
 print("-|||||||||||||||||||||||||-")
+
+
+

@@ -25,6 +25,7 @@ from users import views as user_views
 from users.forms import EmailValidationOnForgotPassword
 urlpatterns = [
     path('', include('blog.urls')),
+    
     path('admin/', admin.site.urls),
     path('register/', user_views.register, name = 'register'),
     path('login/', auth_views.LoginView.as_view(template_name='users/login.html',redirect_authenticated_user=True), name = 'login'),
@@ -40,6 +41,9 @@ urlpatterns = [
     path('password-reset-complete/',
     auth_views.PasswordResetCompleteView.as_view(template_name='users/password_reset_complete.html'), name = 'password_reset_complete'),
 
+
+    # Rest FRAME WORK 
+    path('api/users/', include('users.api.urls', 'users_api')),
 
 ]
 if settings.DEBUG:

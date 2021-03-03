@@ -11,7 +11,7 @@ class Profile (models.Model):
     def __str__(self):
         return f'{self.user.username} Profile'
 
-    def save(self):
+    def save(self, *args, **kwargs):
         # call the old save
         super().save()
 
