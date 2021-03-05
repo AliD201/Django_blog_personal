@@ -15,12 +15,13 @@ Including another URLconf
 """
 from django.urls import path
 from . import views
-
+from rest_framework.authtoken import views as auth_token_views
 app_name = 'users'
 urlpatterns = [
 
     # path('', views.home, name='blog-home'),
     path('register', views.registration, name='user-register-api'),
-   
+    path('login', auth_token_views.obtain_auth_token),
+
 
 ]

@@ -1,6 +1,8 @@
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
 
 from django.contrib.auth.models import User
 from blog.models import Post 
@@ -15,6 +17,7 @@ from .serializers import PostSerializer
 
 
 @api_view(['GET', 'POST'])
+@permission_classes([IsAuthenticated])
 def post_detail(request, id):
     try:
         blog_post = Post.objects.get(id = id)
@@ -28,13 +31,18 @@ def post_detail(request, id):
         return Response(serializer.data)
 
 @api_view(['PUT', ])
+@permission_classes([IsAuthenticated])
 def post_update(request, id):
     try:
         blog_post = Post.objects.get(id = id)
         print( blog_post.__dict__)
     except :
         return Response(status= status.HTTP_404_NOT_FOUND)
-    
+
+    user = request.user
+    if blog_post.author != user:
+            return Response( {'response': "You don't have permission to edit this post "})
+
     if request.method == 'PUT':
         serializer = PostSerializer(blog_post, data= request.data)
         data = {}
@@ -46,6 +54,7 @@ def post_update(request, id):
         return Response(serializer.errors, status =status.HTTP_400_BAD_REQUEST)
 
 @api_view(['DELETE', ])
+@permission_classes([IsAuthenticated])
 def post_delete(request, id):
     try:
         blog_post = Post.objects.get(id = id)
@@ -53,6 +62,10 @@ def post_delete(request, id):
     except :
         return Response(status= status.HTTP_404_NOT_FOUND)
     
+    user = request.user
+    if blog_post.author != user:
+            return Response( {'response': "You don't have permission to edit this post "})
+
     if request.method == 'DELETE':
         operation = blog_post.delete()
         data = {}
@@ -63,8 +76,9 @@ def post_delete(request, id):
         return Response(data = data)
 
 @api_view(['POST', ])
+@permission_classes([IsAuthenticated])
 def post_create(request):
-    user = User.objects.get(pk = 1)
+    user = request.user
     blog_post = Post(author=user)
 
     if request.method == 'POST':

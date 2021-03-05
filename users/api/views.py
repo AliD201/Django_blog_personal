@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view
 from django.contrib.auth.models import User
 from .serializers import RegisterUserSerializer
 
-
+from rest_framework.authtoken.models import Token
 
 
 
@@ -19,6 +19,8 @@ def registration(request):
             data ['response'] = 'succefulklly registered a new user'
             data ['email'] = user.email
             data ['username'] = user.username
+            token = Token.objects.get(user=user).key
+            data ['token'] = token
         else:
             data = serializer.errors
         return Response(data)
