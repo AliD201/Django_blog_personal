@@ -2,11 +2,19 @@ from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.generics import ListAPIView
+from rest_framework.filters import SearchFilter, OrderingFilter
 
+from rest_framework.authentication import TokenAuthentication
 
 from django.contrib.auth.models import User
 from blog.models import Post 
 from .serializers import PostSerializer
+
+from django.utils import timezone
+import datetime
+
 
 
 
@@ -16,7 +24,7 @@ from .serializers import PostSerializer
 
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET',])
 @permission_classes([IsAuthenticated])
 def post_detail(request, id):
     try:
@@ -27,8 +35,8 @@ def post_detail(request, id):
     
     if request.method == 'GET':
         serializer = PostSerializer(blog_post)
-        print()
         return Response(serializer.data)
+
 
 @api_view(['PUT', ])
 @permission_classes([IsAuthenticated])
@@ -46,12 +54,12 @@ def post_update(request, id):
     if request.method == 'PUT':
         serializer = PostSerializer(blog_post, data= request.data)
         data = {}
-        print(request.data)
         if serializer.is_valid():
             serializer.save()
             data['success'] = "updated succefully"
             return Response(data = data)
         return Response(serializer.errors, status =status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['DELETE', ])
 @permission_classes([IsAuthenticated])
@@ -75,11 +83,13 @@ def post_delete(request, id):
             data ['failure'] = 'delete failed'
         return Response(data = data)
 
+
 @api_view(['POST', ])
 @permission_classes([IsAuthenticated])
 def post_create(request):
     user = request.user
     blog_post = Post(author=user)
+    blog_post.date_posted = now = datetime.datetime.now().isoformat(sep='T') + 'Z'
 
     if request.method == 'POST':
         serializer = PostSerializer(blog_post, data= request.data)
@@ -90,6 +100,20 @@ def post_create(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+# we will change the base and use now a class based views 
+class post_list_view(ListAPIView):
+    queryset = Post.objects.all()
+    
+    serializer_class = PostSerializer
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
+    filter_backends = ( SearchFilter, OrderingFilter)
+    search_fields = ('title', 'content', 'author__username', 'date_posted')
+ 
+
+    # ordering_fields = ['title', 'author','date_posted']
+    # ordering = ['-date_posted']
 
 # @api_view(['GET', 'POST'])
 # def posts_list(request, id):

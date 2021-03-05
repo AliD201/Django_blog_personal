@@ -24,6 +24,8 @@ urlpatterns = [
     path('post/new', views.post_create, name='blog-new-api'),
     path('post/<int:id>/update', views.post_update, name='post-update-api'),
     path('post/<int:id>/delete', views.post_delete, name='post-delete-api'),
+    path('posts/', views.post_list_view.as_view(), name='posts-list-api'),
+
 
 
 ]

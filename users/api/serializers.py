@@ -2,6 +2,7 @@ from rest_framework import serializers
 from blog.models import Post
 from django.contrib.auth.models import User
 
+from users.models import Profile
 
 class RegisterUserSerializer(serializers.ModelSerializer):
 
@@ -28,3 +29,17 @@ class RegisterUserSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save(args, kwargs)
         return user
+
+
+class UserSerializer ( serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ['pk', 'email', 'username']
+
+
+class ProfileSerializer ( serializers.ModelSerializer):
+
+    class Meta:
+        model = Profile
+        fields = ['image']
