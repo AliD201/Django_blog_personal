@@ -1,17 +1,11 @@
 ﻿# Django-blog
 
 
-this repository will cover my take on Corey django tutorial  
-https://www.youtube.com/watch?v=UmljXZIypDc&list=PL-osiE80TeTtoQCKZ03TU5fNfx2UY6U4p&index=1  
 
-
-
-This branch will try to implement API routes and Authintactions through this API
+This branch will try to implement API routes and Authintactions through this API  
 it will also cover identity and access managment 
 
    
-Current progress 12/16 officially done*
-
 
 
 So far: 
